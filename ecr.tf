@@ -7,8 +7,8 @@ resource "aws_kms_key" "ecr_kms" {
 }
 
 resource "aws_ecr_repository" "my_ecr_repo" {
-  name         = "tf-aws-jchung-lambda-function-chrome-ecr-repo"
-  force_delete = true
+  name                 = "tf-aws-jchung-lambda-function-chrome-ecr-repo"
+  force_delete         = true
   image_tag_mutability = "IMMUTABLE"
 
   image_scanning_configuration {
