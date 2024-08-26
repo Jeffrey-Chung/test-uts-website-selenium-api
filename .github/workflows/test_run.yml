@@ -27,7 +27,7 @@ jobs:
       with:
         filters: |
           python_code:
-            - './*.py'
+            - 'aws_lambda_functions/**/*.py'
           
   # run only if python scripts were changed
   check_python_linting:
