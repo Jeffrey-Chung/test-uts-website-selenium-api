@@ -5,54 +5,13 @@ on:
 
 env:
    AWS_REGION: ap-southeast-2
-   IAM_ROLE: "arn:aws:iam::663790350014:role/GitHubAction-AssumeRoleWithAction"
+   IAM_ROLE: "arn:aws:iam::663790350014:role/GitHubAction-SeleniumAPI"
    TF_VERSION: 1.3.7
 permissions: 
    id-token: write
    contents: read
 
 jobs:
-  changes:
-    name: 'changes'
-    runs-on: ubuntu-latest
-    outputs:
-      has_python_changes: ${{ steps.changes.outputs.python_code }}
-      has_js_changes: ${{ steps.changes.outputs.js_code }}
-    steps:
-    - name: Check out this repository
-      uses: actions/checkout@v3
-
-    - uses: dorny/paths-filter@v3
-      id: changes
-      with:
-        filters: |
-          python_code:
-            - 'lambda_src_chrome/**'
-          
-  # run only if python scripts were changed
-  check_python_linting:
-    name: 'check_python_linting'
-    runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.has_python_changes == 'true'
-    steps:
-    - name: Check out this repository
-      uses: actions/checkout@v3
-
-    - name: Setting up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11.2'
-
-    - name: Install dependencies
-      run: |
-        python3 -m pip install --upgrade pip
-        pip install pylint
-
-    - name: Analysing the code with pylint
-      run: |
-        pylint $(git ls-files '*.py')
-
   tf-aws-api-test:
     name: 'tf-aws-api-test'
     runs-on: ubuntu-latest

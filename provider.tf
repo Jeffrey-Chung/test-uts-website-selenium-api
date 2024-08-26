@@ -14,10 +14,9 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "tf-aws-test-uts-website-selenium-api-state-bucket"
-    key            = "terraform.tfstate"
-    region         = "ap-southeast-2"
-    encrypt        = true
-    dynamodb_table = "terraform-state-lock"
+    bucket  = "tf-aws-test-uts-website-selenium-api-state-bucket"
+    key     = "terraform.tfstate"
+    region  = "ap-southeast-2"
+    encrypt = true
   }
 }
