@@ -12,6 +12,6 @@ RUN rm ./chrome-installer.sh
 
 RUN pip install selenium
 
-COPY index.py ./
+COPY ./index.py ./
 
 CMD [ "index.lambda_handler" ] 
