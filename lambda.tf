@@ -13,7 +13,7 @@ resource "aws_lambda_function" "jchung_lambda_function_chrome" {
   function_name = "jchung_test_uts_website_chrome"
   role          = "arn:aws:iam::663790350014:role/jchung_lambda_role"
   handler       = "index.lambda_handler"
-  runtime       = "python3.12"
+  runtime       = "python3.10"
   tracing_config {
     mode = "Active"
   }
