@@ -1,4 +1,4 @@
-FROM amazon/aws-lambda-python:3.12
+FROM amazon/aws-lambda-python:3.10
 
 # install chrome dependencies
 RUN dnf install -y atk cups-libs gtk3 libXcomposite alsa-lib \
@@ -13,6 +13,6 @@ RUN rm aws_lambda_functions/lambda_src_chrome/chrome-installer.sh
 
 RUN pip install selenium
 
-COPY aws_lambda_functions/lambda_src_chrome/index.py aws_lambda_functions/lambda_src_chrome/index.py
+COPY aws_lambda_functions/lambda_src_chrome/index.py aws_lambda_functions/lambda_src_chrome/
 
-CMD [ "index.lambda_handler" ] 
+CMD [ "aws_lambda_functions/lambda_src_chrome/index.lambda_handler" ] 
