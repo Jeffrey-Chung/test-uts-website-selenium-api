@@ -14,9 +14,9 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "tf-aws-test-uts-website-selenium-api-state-bucket"
-    key            = "terraform.tfstate"
-    region         = "ap-southeast-2"
-    encrypt        = true
+    bucket  = "tf-aws-test-uts-website-selenium-api-state-bucket"
+    key     = "terraform.tfstate"
+    region  = "ap-southeast-2"
+    encrypt = true
   }
 }
