@@ -7,6 +7,7 @@ RUN dnf install -y atk cups-libs gtk3 libXcomposite alsa-lib \
     xorg-x11-xauth dbus-glib dbus-glib-devel nss mesa-libgbm jq unzip
 
 COPY aws_lambda_functions/lambda_src_chrome/chrome-installer.sh aws_lambda_functions/lambda_src_chrome/chrome-installer.sh
+RUN chmod +x aws_lambda_functions/lambda_src_chrome/chrome-installer.sh
 RUN aws_lambda_functions/lambda_src_chrome/chrome-installer.sh
 RUN rm aws_lambda_functions/lambda_src_chrome/chrome-installer.sh
 
