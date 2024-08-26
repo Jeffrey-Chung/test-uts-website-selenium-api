@@ -1,0 +1,120 @@
+name: Deployment - terraform apply
+
+on:
+  workflow_dispatch:
+    inputs:
+      action_type:
+          description: "Type of action you want to take (i.e. 'build' or 'destroy')"
+          type: choice
+          required: true
+          options:
+            - build
+            - destroy
+
+env:
+   AWS_REGION: ap-southeast-2
+   IAM_ROLE: "arn:aws:iam::663790350014:role/GitHubAction-AssumeRoleWithAction"
+   TF_VERSION: 1.3.7
+permissions: 
+   id-token: write
+   contents: read
+
+jobs:          
+  tf-aws-api-build:
+    name: 'tf-aws-api-build'
+    runs-on: ubuntu-latest
+    if: inputs.action_type == 'build'
+    steps:
+      - name: Check out this repository
+        uses: actions/checkout@v3
+
+      - name: Set AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ env.IAM_ROLE }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - uses: hashicorp/setup-terraform@v2
+
+      - name: Setting up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11.2'
+      
+      - name: Install boto3
+        run: pip install --upgrade pip boto3
+
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
+
+      - name: Terraform init
+        id: init
+        run: terraform init
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan
+        continue-on-error: false
+      
+      - name: Terraform Apply
+        id: apply
+        run: terraform apply -auto-approve
+        continue-on-error: false
+      
+      - name: Get commit hash
+        id: get-commit-hash
+        run: echo "::set-output name=commit-hash::$(git rev-parse --short HEAD)"
+        
+      - name: Get timestamp
+        id: get-timestamp
+        run: echo "::set-output name=timestamp::$(date +'%Y-%m-%d-%H-%M')"
+
+      - name: Build, tag, and push the image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: "jchung-lambda-function-chrome-ecr-repo"
+          IMAGE_TAG: ${{ steps.get-commit-hash.outputs.commit-hash }}-${{ steps.get-timestamp.outputs.timestamp }}
+        run: |
+          docker build . -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f aws_lambda_functions/lambda_src_chrome/Dockerfile
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+  tf-aws-api-destroy:
+    name: 'tf-aws-api-destroy'
+    runs-on: ubuntu-latest
+    if: inputs.action_type == 'destroy'
+    steps:
+      - name: Check out this repository
+        uses: actions/checkout@v3
+
+      - name: Set AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ env.IAM_ROLE }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform init
+        id: init
+        run: terraform init
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan
+        continue-on-error: false
+      
+      - name: Terraform Destroy
+        id: destroy
+        run: terraform destroy -auto-approve
+        continue-on-error: false

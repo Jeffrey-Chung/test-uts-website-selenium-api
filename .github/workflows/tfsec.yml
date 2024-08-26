@@ -1,0 +1,24 @@
+name: tfsec
+on:
+  pull_request:
+jobs:
+  tfsec:
+    name: tfsec
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@master
+      
+      - name: tfsec
+        uses: reviewdog/action-tfsec@master
+        with:
+          github_token: ${{ secrets.github_token }}
+          working_directory: .
+          level: info
+          reporter: github-pr-review
+          filter_mode: nofilter
+          fail_on_error: true
+          flags: -tee
+          tfsec_flags: ""
+
