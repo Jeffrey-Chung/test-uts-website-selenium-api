@@ -27,7 +27,7 @@ jobs:
       with:
         filters: |
           python_code:
-            - 'lambda_src_chrome/**'
+            - '*.py'
           
   # run only if python scripts were changed
   check_python_linting:
