@@ -17,7 +17,7 @@ env:
    TF_VERSION: 1.3.7
 permissions: 
    id-token: write
-   contents: write
+   contents: read
 
 jobs:          
   tf-aws-api-build:
