@@ -3,7 +3,7 @@ AWS_ECR_REGION = ap-southeast-2
 
 # Will get them via GitHub Actions or get it from the AWS Console
 ECR_REPOSITORY ?=
-ECR_REGISTRY ?= 
+ECR_REGISTRY ?=
 TAG ?=
 
 
