@@ -1,6 +1,10 @@
 name: Deployment - terraform apply
 
 on:
+  push:
+    branches:
+      - main
+      
   workflow_dispatch:
     inputs:
       action_type:
