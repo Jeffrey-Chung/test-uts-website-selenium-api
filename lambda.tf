@@ -12,7 +12,7 @@ resource "aws_lambda_function" "jchung_lambda_function_chrome" {
   filename      = "${path.root}/aws_lambda_functions/lambda_src_chrome.zip"
   function_name = "jchung_test_uts_website_chrome"
   role          = "arn:aws:iam::663790350014:role/jchung_lambda_role"
-  handler       = "aws_lambda_functions/lambda_src_chrome/index.lambda_handler"
+  handler       = "index.lambda_handler"
   runtime       = "python3.10"
   tracing_config {
     mode = "Active"
