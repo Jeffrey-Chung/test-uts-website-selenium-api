@@ -71,7 +71,8 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           cd aws_lambda_functions/lambda_src_chrome
-          make docker/push TAG=$IMAGE_TAG ECR_REGISTRY=$ECR_REGISTRY ECR_REPOSITORY=$ECR_REPOSITORY
+          make docker/build TAG=$IMAGE_TAG
+          make docker/push TAG=$IMAGE_TAG
 
   tf-aws-api-destroy:
     name: 'tf-aws-api-destroy'
