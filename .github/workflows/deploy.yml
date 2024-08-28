@@ -70,8 +70,8 @@ jobs:
           ECR_REPOSITORY: "tf-aws-jchung-lambda-function-chrome-ecr-repo"
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build . -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f aws_lambda_functions/lambda_src_chrome/Dockerfile
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          cd aws_lambda_functions/lambda_src_chrome
+          make docker/push TAG=$IMAGE_TAG ECR_REGISTRY=$ECR_REGISTRY ECR_REPOSITORY=$ECR_REPOSITORY
 
   tf-aws-api-destroy:
     name: 'tf-aws-api-destroy'
