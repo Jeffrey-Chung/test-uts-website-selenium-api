@@ -10,7 +10,7 @@ TAG ?=
 .PHONY : docker/build docker/push docker/run
 
 docker/build :
-	docker build . -t $(ECR_REGISTRY)/$(ECR_REPOSITORY):$(TAG)
+	docker build -t $(ECR_REGISTRY)/$(ECR_REPOSITORY):$(TAG) -f aws_lambda_functions/lambda_src_chrome/Dockerfile .
 
 
 docker/push : 
