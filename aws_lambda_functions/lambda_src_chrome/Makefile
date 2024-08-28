@@ -8,7 +8,7 @@ ECR_REGISTRY ?=
 TAG ?=
 
 
-.PHONY : docker/build docker/push docker/run
+.PHONY : docker/build docker/push docker/run docker/test
 
 docker/build :
 	docker build . -t $(APP_NAME):$(TAG)
@@ -21,4 +21,7 @@ docker/push : docker/build
 
 
 docker/run :
-	docker run $(AWS_ECR_ACCOUNT_ID).dkr.ecr.$(AWS_ECR_REGION).amazonaws.com/$(ECR_REPOSITORY):$(TAG)
+	docker run -p 9000:8080 $(AWS_ECR_ACCOUNT_ID).dkr.ecr.$(AWS_ECR_REGION).amazonaws.com/$(ECR_REPOSITORY):$(TAG)
+
+docker/test :
+	curl -XPOST 'http://localhost:9000/2015-03-31/functions/function/invocations' -d '{}'

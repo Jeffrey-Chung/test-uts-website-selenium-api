@@ -21,13 +21,7 @@ def initialise_driver():
     chrome_options.add_argument("--log-path=/tmp")
     chrome_options.binary_location = "/opt/chrome/chrome-linux64/chrome"
 
-    service = Service(
-        executable_path="/opt/chrome-driver/chromedriver-linux64/chromedriver",
-        service_log_path="/tmp/chromedriver.log"
-    )
-
     driver = webdriver.Chrome(
-        service=service,
         options=chrome_options
     )
 
