@@ -1,19 +1,34 @@
-FROM amazon/aws-lambda-python:3.10
+FROM amazon/aws-lambda-python:3.10 as stage
 
 # install chrome dependencies
 # yum for python3.12 onwards
-RUN yum install -y atk cups-libs gtk3 libXcomposite alsa-lib \
-    libXcursor libXdamage libXext libXi libXrandr libXScrnSaver \
-    libXtst pango at-spi2-atk libXt xorg-x11-server-Xvfb \
-    xorg-x11-xauth dbus-glib dbus-glib-devel nss mesa-libgbm jq unzip
+# Hack to install chromium dependencies
+RUN yum install -y -q sudo unzip
 
-COPY ./chrome-installer.sh ./chrome-installer.sh
+# Find the version of latest stable build of chromium from below
+# https://omahaproxy.appspot.com/
+# Then follow the instructions here in below URL 
+# to download old builds of Chrome/Chromium that are stable
+# Current stable version of Chromium
+ENV CHROMIUM_VERSION=1002910 
+
+COPY ./chrome-installer.sh /tmp/
 RUN chmod +x ./chrome-installer.sh
-RUN ./chrome-installer.sh
+RUN /usr/bin/bash /tmp/install-browser.sh
 RUN rm ./chrome-installer.sh
 
-RUN pip install selenium
+FROM amazon/aws-lambda-python:3.10 as base
 
-COPY index.py ./
+COPY ./chrome-deps.txt /tmp/
+RUN yum install -y $(cat /tmp/chrome-deps.txt)
+
+COPY ./requirements.txt /tmp/
+RUN python3 -m pip install --upgrade pip -q
+RUN python3 -m pip install -r /tmp/requirements.txt -q 
+
+COPY --from=stage /opt/chrome /opt/chrome
+COPY --from=stage /opt/chromedriver /opt/chromedriver
+
+COPY index.py ${LAMBDA_TASK_ROOT}
 
 CMD [ "index.lambda_handler" ] 
