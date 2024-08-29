@@ -13,9 +13,9 @@ RUN yum install -y -q sudo unzip
 ENV CHROMIUM_VERSION=1002910 
 
 COPY ./chrome-installer.sh /tmp/
-RUN chmod +x ./chrome-installer.sh
-RUN /usr/bin/bash /tmp/install-browser.sh
-RUN rm ./chrome-installer.sh
+RUN chmod +x /tmp/chrome-installer.sh
+RUN /usr/bin/bash /tmp/chrome-installer.sh
+RUN rm /tmp/chrome-installer.sh
 
 FROM amazon/aws-lambda-python:3.10 as base
 
