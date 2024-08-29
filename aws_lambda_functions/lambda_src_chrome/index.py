@@ -17,7 +17,8 @@ def initialise_driver():
     chrome_options.add_argument("window-size=2560x1440")
     chrome_options.add_argument("--user-data-dir=/tmp/chrome-user-data")
     chrome_options.add_argument("--remote-debugging-port=9222")
-    driver = webdriver.Chrome("/opt/chromedriver", options=chrome_options)
+    chrome_service = Service(executable_path = "/opt/chromedriver")
+    driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
     return driver
 
 def ui_test(driver):
