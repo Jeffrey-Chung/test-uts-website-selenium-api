@@ -45,6 +45,13 @@ jobs:
         run: terraform plan 
         continue-on-error: false
 
+      - name: Test Building Docker Image
+        env: 
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          cd aws_lambda_functions/lambda_src_chrome
+          make docker/build TAG=$IMAGE_TAG
+
       
       
     
