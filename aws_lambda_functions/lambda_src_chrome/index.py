@@ -6,25 +6,18 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 
 def initialise_driver():
     chrome_options = ChromeOptions()
-    chrome_options.add_argument("--headless=new")
+    chrome_options.binary_location = "/opt/chrome/chrome"
+    chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--disable-dev-tools")
     chrome_options.add_argument("--no-zygote")
     chrome_options.add_argument("--single-process")
-    chrome_options.add_argument(f"--user-data-dir={mkdtemp()}")
-    chrome_options.add_argument(f"--data-path={mkdtemp()}")
-    chrome_options.add_argument(f"--disk-cache-dir={mkdtemp()}")
-    chrome_options.add_argument("--remote-debugging-pipe")
-    chrome_options.add_argument("--verbose")
-    chrome_options.add_argument("--log-path=/tmp")
-    chrome_options.binary_location = "/opt/chrome/chrome-linux64/chrome"
-
-    driver = webdriver.Chrome(
-        options=chrome_options
-    )
-
+    chrome_options.add_argument("window-size=2560x1440")
+    chrome_options.add_argument("--user-data-dir=/tmp/chrome-user-data")
+    chrome_options.add_argument("--remote-debugging-port=9222")
+    driver = webdriver.Chrome("/opt/chromedriver", options=chrome_options)
     return driver
 
 def ui_test(driver):
@@ -74,23 +67,18 @@ def ui_test(driver):
         driver.quit()
     return result
 
-def lambda_handler(event, context):
+def lambda_handler(event=None, context=None):
     driver = initialise_driver()
     driver.get("https://www.uts.edu.au/")
     ui_test_status = ui_test(driver)
-
-    body = {
-        "title": driver.title,
-        "status": ui_test_status
-    }
-
     response = {
         "statusCode": 200,
-        "headers": {
-            "Content-Type": "application/json"
-        },
-        "body": json.dumps(body)
+        "body": json.dumps(
+            {
+                "title": driver.title,
+                "status": ui_test_status
+            }
+        )
     }
-
     return response
 

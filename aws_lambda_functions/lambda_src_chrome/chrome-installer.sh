@@ -1,22 +1,14 @@
 #!/bin/bash
-set -e
 
-latest_stable_json="https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json"
-# Retrieve the JSON data using curl
-json_data=$(curl -s "$latest_stable_json")
+echo "Downloading Chromium..."
+curl "https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/\
+Linux_x64%2F$CHROMIUM_VERSION%2Fchrome-linux.zip?generation=1652397748160413&alt=media" > /tmp/chromium.zip
 
-latest_chrome_linux_download_url="$(echo "$json_data" | jq -r ".channels.Stable.downloads.chrome[0].url")"
-latest_chrome_driver_linux_download_url="$(echo "$json_data" | jq -r ".channels.Stable.downloads.chromedriver[0].url")"
+unzip /tmp/chromium.zip -d /tmp/
+mv /tmp/chrome-linux/ /opt/chrome
 
-download_path_chrome_linux="/opt/chrome-headless-shell-linux.zip"
-dowload_path_chrome_driver_linux="/opt/chrome-driver-linux.zip"
+curl "https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/\
+Linux_x64%2F$CHROMIUM_VERSION%2Fchromedriver_linux64.zip?generation=1652397753719852&alt=media" > /tmp/chromedriver_linux64.zip
 
-mkdir -p "/opt/chrome"
-curl -Lo $download_path_chrome_linux $latest_chrome_linux_download_url
-unzip -q $download_path_chrome_linux -d "/opt/chrome"
-rm -rf $download_path_chrome_linux
-
-mkdir -p "/opt/chrome-driver"
-curl -Lo $dowload_path_chrome_driver_linux $latest_chrome_driver_linux_download_url
-unzip -q $dowload_path_chrome_driver_linux -d "/opt/chrome-driver"
-rm -rf $dowload_path_chrome_driver_linux
+unzip /tmp/chromedriver_linux64.zip -d /tmp/
+mv /tmp/chromedriver_linux64/chromedriver /opt/chromedriver
