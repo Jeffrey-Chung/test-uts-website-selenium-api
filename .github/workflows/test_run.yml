@@ -51,6 +51,9 @@ jobs:
         run: |
           cd aws_lambda_functions/lambda_src_chrome
           make docker/build TAG=$IMAGE_TAG
+          cd ..
+          cd lambda_src_firefox
+          make docker/build TAG=$IMAGE_TAG
 
       
       

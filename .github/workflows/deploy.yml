@@ -63,14 +63,23 @@ jobs:
         run: terraform apply -auto-approve
         continue-on-error: false
       
-      - name: Build, tag, and push the image to Amazon ECR
-        id: build-image
+      - name: Build, tag, and push the Chromium function to Amazon ECR
+        id: build-image-chrome
         env:
           ECR_REPOSITORY: "tf-aws-jchung-lambda-function-chrome-ecr-repo"
           IMAGE_TAG: ${{ github.sha }}
         run: |
           cd aws_lambda_functions/lambda_src_chrome
-          make docker/push TAG=$IMAGE_TAG ECR_REPOSITORY=$ECR_REPOSITORY ECR_REGISTRY=$ECR_REGISTRY
+          make docker/push TAG=$IMAGE_TAG ECR_REPOSITORY=$ECR_REPOSITORY
+      
+      - name: Build, tag, and push the Firefox function to Amazon ECR
+        id: build-image-firefox
+        env:
+          ECR_REPOSITORY: "tf-aws-jchung-lambda-function-firefox-ecr-repo"
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          cd aws_lambda_functions/lambda_src_firefox
+          make docker/push TAG=$IMAGE_TAG ECR_REPOSITORY=$ECR_REPOSITORY
 
   tf-aws-api-destroy:
     name: 'tf-aws-api-destroy'

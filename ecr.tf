@@ -20,3 +20,18 @@ resource "aws_ecr_repository" "my_ecr_repo" {
     kms_key         = aws_kms_key.ecr_kms.key_id
   }
 }
+
+resource "aws_ecr_repository" "my_ecr_repo_firefox" {
+  name                 = "tf-aws-jchung-lambda-function-firefox-ecr-repo"
+  force_delete         = true
+  image_tag_mutability = "IMMUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+
+  encryption_configuration {
+    encryption_type = "KMS"
+    kms_key         = aws_kms_key.ecr_kms.key_id
+  }
+}
