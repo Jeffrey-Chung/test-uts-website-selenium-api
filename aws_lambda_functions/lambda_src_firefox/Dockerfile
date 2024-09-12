@@ -62,8 +62,8 @@ RUN python3 -m pip install --upgrade pip -q
 RUN python3 -m pip install -r /tmp/requirements.txt -q 
 
 # Copy downloaded binaries from the first phase
-COPY --from=stage /opt/firefox /tmp/firefox
-COPY --from=stage /opt/geckodriver /tmp/geckodriver
+COPY --from=stage /opt/firefox /opt/firefox
+COPY --from=stage /opt/geckodriver /opt/geckodriver
 
 COPY index.py ${LAMBDA_TASK_ROOT}
 
