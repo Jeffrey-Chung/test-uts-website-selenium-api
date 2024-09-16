@@ -34,7 +34,7 @@ def initialise_driver():
     firefox_options.add_argument("window-size=2560x1440")
     firefox_options.add_argument("--user-data-dir=/tmp/firefox-user-data")
     firefox_options.add_argument("--remote-debugging-port=9222")
-    firefox_service = Service(executable_path = "/opt/geckodriver")
+    firefox_service = Service(executable_path = "/opt/geckodriver/geckodriver")
     driver = webdriver.Firefox(service=firefox_service, options=firefox_options)
     return driver
 

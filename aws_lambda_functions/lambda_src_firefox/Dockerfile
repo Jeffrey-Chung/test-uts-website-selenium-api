@@ -1,9 +1,9 @@
 FROM amazon/aws-lambda-python:3.10 as stage
 
 # Environment variables to hold URLs for Firefox binaries
-ENV URL_FIREFOX="https://ftp.mozilla.org/pub/firefox/releases/130.0/linux-x86_64/en-US/firefox-130.0.tar.bz2" \
-    URL_GECKODRIVER="https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-linux64.tar.gz" \
-    LOCALPATH_FIREFOX="/tmp/firefox-130.0.tar.bz2" \
+ENV URL_FIREFOX="https://ftp.mozilla.org/pub/firefox/releases/125.0.1/linux-x86_64/en-US/firefox-125.0.1.tar.bz2" \
+    URL_GECKODRIVER="https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz" \
+    LOCALPATH_FIREFOX="/tmp/firefox-125.0.1.tar.bz2" \
     # Set screen size
     SCREEN_WIDTH=2560 \
     SCREEN_HEIGHT=1440
@@ -15,8 +15,8 @@ RUN yum -y -q install unzip gzip tar bzip2 && \
     curl -Lo ${LOCALPATH_FIREFOX} ${URL_FIREFOX} && \
     tar -jxf ${LOCALPATH_FIREFOX} --strip-components=1 -C "/opt/firefox/" && \
     mkdir -p "/opt/geckodriver" && \
-    curl -Lo "/opt/geckodriver/geckodriver-v0.35.0-linux64.tar.gz" ${URL_GECKODRIVER} && \
-    tar -zxf "/opt/geckodriver/geckodriver-v0.35.0-linux64.tar.gz" -C "/opt/geckodriver/" && \
+    curl -Lo "/opt/geckodriver/geckodriver-v0.33.0-linux64.tar.gz" ${URL_GECKODRIVER} && \
+    tar -zxf "/opt/geckodriver/geckodriver-v0.33.0-linux64.tar.gz" -C "/opt/geckodriver/" && \
     chmod +x "/opt/geckodriver/geckodriver" && \
     ln -s /opt/firefox/firefox /usr/bin/firefox && \
     ln -s /opt/geckodriver /usr/bin/geckodriver && \
