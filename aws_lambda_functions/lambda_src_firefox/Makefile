@@ -21,7 +21,7 @@ docker/push : docker/build
 
 docker/run :
 	aws ecr get-login-password --region $(AWS_ECR_REGION) | docker login --username AWS --password-stdin $(AWS_ECR_ACCOUNT_ID).dkr.ecr.$(AWS_ECR_REGION).amazonaws.com
-	docker run -p 9000:8080 $(AWS_ECR_ACCOUNT_ID).dkr.ecr.$(AWS_ECR_REGION).amazonaws.com/$(ECR_REPOSITORY):$(TAG)
+	docker run -p 9001:8080 $(AWS_ECR_ACCOUNT_ID).dkr.ecr.$(AWS_ECR_REGION).amazonaws.com/$(ECR_REPOSITORY):$(TAG)
 
 docker/test :
-	curl -XPOST 'http://localhost:9000/2015-03-31/functions/function/invocations' -d '{}'
+	curl -XPOST 'http://localhost:9001/2015-03-31/functions/function/invocations' -d '{}'
